@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  pg_node_typescript:
+    image: postgres:11-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=node_typescript
+
+  node-typescript-svc:
+    container_name: node-typescript-svc
+    restart: always
+    build:
+      context: .
+      target: dev
+    volumes:
+      - .env.docker:/app/.env
+      - ./src:/app/src/
+    ports:
+      - 8002:8002
+    depends_on:
+      - pg_node_typescript
+    links:
+      - pg_node_typescript
